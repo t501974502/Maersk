@@ -23,10 +23,10 @@ def env(name: str, required: bool = True, default: str | None = None) -> str:
 
 
 def normalize_authorization_value(value: str) -> str:
-    normalized = value.strip()
-    if normalized.lower().startswith("authorization:"):
-        normalized = normalized[len("authorization:") :].strip()
-    return normalized
+    trimmed_value = value.strip()
+    if trimmed_value.lower().startswith("authorization:"):
+        return trimmed_value[len("authorization:") :].strip()
+    return trimmed_value
 
 
 def build_headers() -> dict[str, str]:
