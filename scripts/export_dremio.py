@@ -27,6 +27,8 @@ def build_headers() -> dict[str, str]:
 
     auth_header = os.getenv("DREMIO_AUTH_HEADER", "").strip()
     if auth_header:
+        if auth_header.lower().startswith("authorization:"):
+            auth_header = auth_header.split(":", 1)[1].strip()
         headers["Authorization"] = auth_header
         return headers
 
