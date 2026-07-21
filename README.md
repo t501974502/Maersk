@@ -7,7 +7,7 @@ This repository includes a GitHub Actions workflow that runs a scheduled Dremio 
 ### Required GitHub repository secrets
 - `DREMIO_URL`: for example `https://enterprisedremio.maersk-digital.net`
 - `DREMIO_SQL`: for example `SELECT * FROM "@patrick.tian@lns.maersk.com".test`
-- `DREMIO_AUTH_HEADER` (recommended): the full Authorization header value, such as `_dremio<your-personal-access-token>` or `Bearer <token>`
+- `DREMIO_AUTH_HEADER` (recommended): the Authorization header value, such as `_dremio<your-personal-access-token>`. The script also accepts common copied forms like `Authorization: <value>`.
 - Optional fallback secrets if you prefer to build the header from pieces:
   - `DREMIO_AUTH_SCHEME` (default: `_dremio`)
   - `DREMIO_TOKEN`
