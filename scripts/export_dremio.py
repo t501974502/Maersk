@@ -22,10 +22,19 @@ def env(name: str, required: bool = True, default: str | None = None) -> str:
     return value or ""
 
 
+def normalize_authorization_value(value: str) -> str:
+    normalized = value.strip()
+    if ":" in normalized:
+        prefix, candidate = normalized.split(":", 1)
+        if prefix.strip().lower() == "authorization":
+            normalized = candidate.strip()
+    return normalized
+
+
 def build_headers() -> dict[str, str]:
     headers = {"Content-Type": "application/json"}
 
-    auth_header = os.getenv("DREMIO_AUTH_HEADER", "").strip()
+    auth_header = normalize_authorization_value(os.getenv("DREMIO_AUTH_HEADER", ""))
     if auth_header:
         headers["Authorization"] = auth_header
         return headers
