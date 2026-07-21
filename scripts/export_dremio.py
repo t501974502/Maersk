@@ -9,7 +9,8 @@ from typing import Any
 
 import requests
 
-PAGE_SIZE = int(os.getenv("DREMIO_PAGE_SIZE", "5000"))
+MAX_PAGE_SIZE = 500
+PAGE_SIZE = min(int(os.getenv("DREMIO_PAGE_SIZE", str(MAX_PAGE_SIZE))), MAX_PAGE_SIZE)
 JOB_POLL_SECONDS = float(os.getenv("DREMIO_JOB_POLL_SECONDS", "2"))
 JOB_TIMEOUT_SECONDS = int(os.getenv("DREMIO_JOB_TIMEOUT_SECONDS", "600"))
 REQUEST_TIMEOUT_SECONDS = int(os.getenv("DREMIO_REQUEST_TIMEOUT_SECONDS", "60"))

@@ -12,6 +12,9 @@ This repository includes a GitHub Actions workflow that runs a scheduled Dremio 
   - `DREMIO_AUTH_SCHEME` (default: `_dremio`)
   - `DREMIO_TOKEN`
 
+### Optional secrets
+- `DREMIO_PAGE_SIZE`: optional page size for results retrieval. Values above 500 are automatically clamped because Dremio accepts at most 500 rows per results request.
+
 ### Schedule
 The workflow runs daily at 00:00 UTC, which is 08:00 China Standard Time.
 
