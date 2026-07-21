@@ -4,15 +4,24 @@
 
 This repository includes a GitHub Actions workflow that runs a scheduled Dremio SQL export and uploads the generated CSV as a workflow artifact.
 
+### Default SQL
+The checked-in default query is:
+
+```sql
+SELECT * FROM "fbm-ecl".views."NAM_OPS"."ops_v_raw_gts_events"
+```
+
+The workflow uses `dremio_query.sql` by default. If you set the `DREMIO_SQL` secret, that secret overrides the checked-in SQL.
+
 ### Required GitHub repository secrets
 - `DREMIO_URL`: for example `https://enterprisedremio.maersk-digital.net`
-- `DREMIO_SQL`: for example `SELECT * FROM "@patrick.tian@lns.maersk.com".test`
 - `DREMIO_AUTH_HEADER` (recommended): the full Authorization header value, such as `_dremio<your-personal-access-token>` or `Bearer <token>`
 - Optional fallback secrets if you prefer to build the header from pieces:
   - `DREMIO_AUTH_SCHEME` (default: `_dremio`)
   - `DREMIO_TOKEN`
 
 ### Optional secrets
+- `DREMIO_SQL`: optional override for the checked-in SQL
 - `DREMIO_PAGE_SIZE`: optional page size for results retrieval. Values above 500 are automatically clamped because Dremio accepts at most 500 rows per results request.
 
 ### Schedule

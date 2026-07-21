@@ -23,6 +23,24 @@ def env(name: str, required: bool = True, default: str | None = None) -> str:
     return value or ""
 
 
+def load_sql() -> str:
+    sql = os.getenv("DREMIO_SQL", "").strip()
+    if sql:
+        return sql
+
+    sql_file = os.getenv("DREMIO_SQL_FILE", "dremio_query.sql").strip()
+    path = Path(sql_file)
+    if not path.is_file():
+        raise SystemExit(
+            "Missing DREMIO_SQL and SQL file was not found. Set DREMIO_SQL or commit the SQL file."
+        )
+
+    sql = path.read_text(encoding="utf-8").strip()
+    if not sql:
+        raise SystemExit(f"SQL file is empty: {path}")
+    return sql
+
+
 def build_headers() -> dict[str, str]:
     headers = {"Content-Type": "application/json"}
 
@@ -139,7 +157,7 @@ def write_csv(output_path: Path, columns: list[str], rows: list[dict[str, Any]])
 
 def main() -> int:
     base_url = env("DREMIO_URL").rstrip("/")
-    sql = env("DREMIO_SQL")
+    sql = load_sql()
     output_dir = Path(env("OUTPUT_DIR", required=False, default="output"))
     output_name = os.getenv(
         "OUTPUT_FILENAME",

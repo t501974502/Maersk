@@ -29,6 +29,7 @@ jobs:
         env:
           DREMIO_URL: ${{ secrets.DREMIO_URL }}
           DREMIO_SQL: ${{ secrets.DREMIO_SQL }}
+          DREMIO_SQL_FILE: dremio_query.sql
           DREMIO_AUTH_HEADER: ${{ secrets.DREMIO_AUTH_HEADER }}
           DREMIO_AUTH_SCHEME: ${{ secrets.DREMIO_AUTH_SCHEME }}
           DREMIO_TOKEN: ${{ secrets.DREMIO_TOKEN }}
