@@ -22,13 +22,17 @@ def env(name: str, required: bool = True, default: str | None = None) -> str:
     return value or ""
 
 
+def strip_outer_quotes(value: str) -> str:
+    return value.strip().strip("\"'")
+
+
 def normalize_authorization_value(value: str) -> str:
-    normalized = value.strip().strip("\"'")
+    normalized = strip_outer_quotes(value)
     if ":" in normalized and normalized.lower().startswith("authorization:"):
         normalized = normalized.split(":", 1)[1].strip()
     elif "=" in normalized and normalized.lower().startswith("authorization="):
         normalized = normalized.split("=", 1)[1].strip()
-    return normalized.strip().strip("\"'")
+    return strip_outer_quotes(normalized)
 
 
 def build_headers() -> dict[str, str]:
