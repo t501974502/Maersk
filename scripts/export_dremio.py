@@ -166,9 +166,10 @@ def main() -> int:
     base_url = env("DREMIO_URL").rstrip("/")
     sql = load_sql()
     output_dir = Path(env("OUTPUT_DIR", required=False, default="output"))
+    output_basename = os.getenv("OUTPUT_BASENAME", "dremio_export").strip() or "dremio_export"
     output_name = os.getenv(
         "OUTPUT_FILENAME",
-        f"dremio_export_{datetime.now(timezone.utc).strftime('%Y%m%d_%H%M%S')}.csv",
+        f"{output_basename}_{datetime.now(timezone.utc).strftime('%Y%m%d_%H%M%S')}.csv",
     )
     output_path = output_dir / output_name
 
