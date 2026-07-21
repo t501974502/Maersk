@@ -42,7 +42,7 @@ The Microsoft Entra app used above needs Microsoft Graph application permissions
 The export file defaults to `ops_v_raw_gts_events_YYYYMMDD_HHMMSS.csv`.
 
 ### Schedule
-The workflow runs daily at 00:00 UTC, which is 08:00 China Standard Time.
+The workflow runs daily at 00:30 UTC, which is 08:30 China Standard Time.
 
 ### Manual run
 You can also trigger the workflow manually from the Actions tab using `workflow_dispatch`.
