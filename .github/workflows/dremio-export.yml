@@ -1,0 +1,43 @@
+name: Export Dremio Query
+
+on:
+  schedule:
+    # 00:00 UTC = 08:00 China Standard Time
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: python -m pip install --upgrade pip && pip install -r requirements.txt
+
+      - name: Run Dremio export
+        env:
+          DREMIO_URL: ${{ secrets.DREMIO_URL }}
+          DREMIO_SQL: ${{ secrets.DREMIO_SQL }}
+          DREMIO_AUTH_HEADER: ${{ secrets.DREMIO_AUTH_HEADER }}
+          DREMIO_AUTH_SCHEME: ${{ secrets.DREMIO_AUTH_SCHEME }}
+          DREMIO_TOKEN: ${{ secrets.DREMIO_TOKEN }}
+          OUTPUT_DIR: output
+        run: python scripts/export_dremio.py
+
+      - name: Upload CSV artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dremio-export
+          path: output/
+          if-no-files-found: error
