@@ -36,3 +36,10 @@ jobs:
           DREMIO_JOB_TIMEOUT_SECONDS: "1800"
           OUTPUT_DIR: output
         run: python scripts/export_dremio.py
+
+      - name: Upload CSV artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dremio-export
+          path: output/
+          if-no-files-found: error
