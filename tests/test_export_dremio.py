@@ -7,8 +7,16 @@ from scripts.export_dremio import build_headers, normalize_authorization_value
 
 class TestAuthorizationHeaders(unittest.TestCase):
     def test_normalize_authorization_strips_header_name(self) -> None:
-        value = "Authorization: ******"
-        self.assertEqual(normalize_authorization_value(value), "******")
+        value = "Authorization: _dremioabc123"
+        self.assertEqual(normalize_authorization_value(value), "_dremioabc123")
+
+    def test_normalize_authorization_handles_case_and_whitespace(self) -> None:
+        value = "  AUTHORIZATION:   Token abc123  "
+        self.assertEqual(normalize_authorization_value(value), "Token abc123")
+
+    def test_normalize_authorization_passthrough_without_prefix(self) -> None:
+        value = "_dremioabc123"
+        self.assertEqual(normalize_authorization_value(value), "_dremioabc123")
 
     def test_build_headers_accepts_authorization_prefix_value(self) -> None:
         env_vars = {
