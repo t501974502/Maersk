@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import csv
 import os
-import sys
 import time
 from datetime import datetime, timezone
 from pathlib import Path
@@ -37,11 +36,13 @@ def build_headers() -> dict[str, str]:
             "Set DREMIO_AUTH_HEADER, or set DREMIO_TOKEN with DREMIO_AUTH_SCHEME (default: _dremio)."
         )
 
-    scheme = os.getenv("DREMIO_AUTH_SCHEME", "_dremio")
-    if scheme and not scheme.endswith(" ") and not token.startswith(" "):
+    scheme = os.getenv("DREMIO_AUTH_SCHEME", "_dremio").strip()
+    if not scheme:
+        headers["Authorization"] = token
+    elif scheme == "_dremio" or scheme.endswith(" "):
         headers["Authorization"] = f"{scheme}{token}"
     else:
-        headers["Authorization"] = f"{scheme}{token}".strip()
+        headers["Authorization"] = f"{scheme} {token}"
     return headers
 
 
