@@ -33,12 +33,6 @@ jobs:
           DREMIO_AUTH_HEADER: ${{ secrets.DREMIO_AUTH_HEADER }}
           DREMIO_AUTH_SCHEME: ${{ secrets.DREMIO_AUTH_SCHEME }}
           DREMIO_TOKEN: ${{ secrets.DREMIO_TOKEN }}
+          DREMIO_JOB_TIMEOUT_SECONDS: "1800"
           OUTPUT_DIR: output
         run: python scripts/export_dremio.py
-
-      - name: Upload CSV artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: dremio-export
-          path: output/
-          if-no-files-found: error

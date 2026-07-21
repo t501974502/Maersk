@@ -11,8 +11,8 @@ import requests
 
 MAX_PAGE_SIZE = 500
 PAGE_SIZE = min(int(os.getenv("DREMIO_PAGE_SIZE", str(MAX_PAGE_SIZE))), MAX_PAGE_SIZE)
-JOB_POLL_SECONDS = float(os.getenv("DREMIO_JOB_POLL_SECONDS", "2"))
-JOB_TIMEOUT_SECONDS = int(os.getenv("DREMIO_JOB_TIMEOUT_SECONDS", "600"))
+JOB_POLL_SECONDS = float(os.getenv("DREMIO_JOB_POLL_SECONDS", "5"))
+JOB_TIMEOUT_SECONDS = int(os.getenv("DREMIO_JOB_TIMEOUT_SECONDS", "1800"))
 REQUEST_TIMEOUT_SECONDS = int(os.getenv("DREMIO_REQUEST_TIMEOUT_SECONDS", "60"))
 
 
@@ -91,10 +91,17 @@ def get_job_state(base_url: str, job_id: str, headers: dict[str, str]) -> dict[s
 
 
 def wait_for_job(base_url: str, job_id: str, headers: dict[str, str]) -> dict[str, Any]:
-    deadline = time.time() + JOB_TIMEOUT_SECONDS
+    start_time = time.time()
+    deadline = start_time + JOB_TIMEOUT_SECONDS
+    last_state = None
+
     while True:
         payload = get_job_state(base_url, job_id, headers)
         state = str(payload.get("jobState", "")).upper()
+        if state != last_state:
+            elapsed = int(time.time() - start_time)
+            print(f"Job {job_id} state: {state or 'UNKNOWN'} after {elapsed}s")
+            last_state = state
         if state == "COMPLETED":
             return payload
         if state in {"FAILED", "CANCELED", "CANCELLED"}:
