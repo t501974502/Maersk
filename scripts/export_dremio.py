@@ -24,10 +24,8 @@ def env(name: str, required: bool = True, default: str | None = None) -> str:
 
 def normalize_authorization_value(value: str) -> str:
     normalized = value.strip()
-    if ":" in normalized:
-        prefix, candidate = normalized.split(":", 1)
-        if prefix.strip().lower() == "authorization":
-            normalized = candidate.strip()
+    if normalized.lower().startswith("authorization:"):
+        normalized = normalized[len("authorization:") :].strip()
     return normalized
 
 

@@ -16,6 +16,11 @@ class BuildHeadersTests(unittest.TestCase):
             headers = build_headers()
         self.assertEqual(headers["Authorization"], "sample-auth-token")
 
+    def test_keeps_non_authorization_prefix_unchanged(self) -> None:
+        with patch.dict(os.environ, {"DREMIO_AUTH_HEADER": "custom:sample-auth-token"}, clear=True):
+            headers = build_headers()
+        self.assertEqual(headers["Authorization"], "custom:sample-auth-token")
+
 
 if __name__ == "__main__":
     unittest.main()
