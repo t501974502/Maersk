@@ -45,8 +45,7 @@ jobs:
           path: output/
           if-no-files-found: error
 
-      - name: Upload CSV to SharePoint
-        if: ${{ secrets.SHAREPOINT_TENANT_ID != '' && secrets.SHAREPOINT_CLIENT_ID != '' && secrets.SHAREPOINT_CLIENT_SECRET != '' && secrets.SHAREPOINT_HOSTNAME != '' && secrets.SHAREPOINT_SITE_PATH != '' }}
+      - name: Optional upload to SharePoint and email delivery
         env:
           OUTPUT_DIR: output
           SHAREPOINT_TENANT_ID: ${{ secrets.SHAREPOINT_TENANT_ID }}
@@ -57,12 +56,6 @@ jobs:
           SHAREPOINT_DRIVE_ID: ${{ secrets.SHAREPOINT_DRIVE_ID }}
           SHAREPOINT_DRIVE_NAME: ${{ secrets.SHAREPOINT_DRIVE_NAME }}
           SHAREPOINT_FOLDER_PATH: ${{ secrets.SHAREPOINT_FOLDER_PATH }}
-        run: python scripts/upload_to_sharepoint.py
-
-      - name: Email CSV attachment
-        if: ${{ secrets.SMTP_HOST != '' && secrets.SMTP_PORT != '' && secrets.SMTP_USERNAME != '' && secrets.SMTP_PASSWORD != '' && secrets.SMTP_FROM != '' && secrets.SMTP_TO != '' }}
-        env:
-          OUTPUT_DIR: output
           SMTP_HOST: ${{ secrets.SMTP_HOST }}
           SMTP_PORT: ${{ secrets.SMTP_PORT }}
           SMTP_USERNAME: ${{ secrets.SMTP_USERNAME }}
@@ -72,4 +65,16 @@ jobs:
           SMTP_SECURITY: ${{ secrets.SMTP_SECURITY }}
           SMTP_SUBJECT: ${{ secrets.SMTP_SUBJECT }}
           SMTP_BODY: ${{ secrets.SMTP_BODY }}
-        run: python scripts/send_email_with_attachment.py
+        run: |
+          set -e
+          if [ -n "$SHAREPOINT_TENANT_ID" ] && [ -n "$SHAREPOINT_CLIENT_ID" ] && [ -n "$SHAREPOINT_CLIENT_SECRET" ] && [ -n "$SHAREPOINT_HOSTNAME" ] && [ -n "$SHAREPOINT_SITE_PATH" ]; then
+            python scripts/upload_to_sharepoint.py
+          else
+            echo "Skipping SharePoint upload: required secrets are not fully configured."
+          fi
+
+          if [ -n "$SMTP_HOST" ] && [ -n "$SMTP_PORT" ] && [ -n "$SMTP_USERNAME" ] && [ -n "$SMTP_PASSWORD" ] && [ -n "$SMTP_FROM" ] && [ -n "$SMTP_TO" ]; then
+            python scripts/send_email_with_attachment.py
+          else
+            echo "Skipping email delivery: required SMTP secrets are not fully configured."
+          fi
