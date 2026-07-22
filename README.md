@@ -4,6 +4,8 @@
 
 This repository includes a GitHub Actions workflow that runs a scheduled Dremio SQL export, uploads the generated CSV as a workflow artifact, and can email the same CSV as an attachment.
 
+For local use, see `scripts/run_local_report.py`.
+
 ### Default SQL
 The checked-in default query is:
 
@@ -36,6 +38,15 @@ To email the export as an attachment, add these repository secrets:
   - `SMTP_SECURITY` (`starttls`, `ssl`, or `none`; default: `starttls`)
   - `SMTP_SUBJECT`
   - `SMTP_BODY`
+
+### Local run
+Create a `.env` file or set environment variables, then run:
+
+```bash
+python scripts/run_local_report.py
+```
+
+The script will export the CSV locally and send the email with that CSV attached.
 
 ### Output naming
 The export file defaults to `ops_v_raw_gts_events_YYYYMMDD_HHMMSS.csv`.
