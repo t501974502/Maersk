@@ -3,7 +3,6 @@ from __future__ import annotations
 import mimetypes
 import os
 import smtplib
-from email import encoders
 from email.message import EmailMessage
 from email.utils import formatdate
 from pathlib import Path
