@@ -2,7 +2,7 @@
 
 ## Dremio export automation
 
-This repository includes a GitHub Actions workflow that runs a scheduled Dremio SQL export, uploads the generated CSV as a workflow artifact, and can optionally upload the same CSV to SharePoint or email it as an attachment.
+This repository includes a GitHub Actions workflow that runs a scheduled Dremio SQL export, uploads the generated CSV as a workflow artifact, and can email the same CSV as an attachment.
 
 ### Default SQL
 The checked-in default query is:
@@ -23,20 +23,6 @@ The workflow uses `dremio_query.sql` by default. If you set the `DREMIO_SQL` sec
 ### Optional Dremio secrets
 - `DREMIO_SQL`: optional override for the checked-in SQL
 - `DREMIO_PAGE_SIZE`: optional page size for results retrieval. Values above 500 are automatically clamped because Dremio accepts at most 500 rows per results request.
-
-### Optional SharePoint upload secrets
-To enable SharePoint upload, add these repository secrets and rerun the workflow:
-- `SHAREPOINT_TENANT_ID`
-- `SHAREPOINT_CLIENT_ID`
-- `SHAREPOINT_CLIENT_SECRET`
-- `SHAREPOINT_HOSTNAME`: for example `contoso.sharepoint.com`
-- `SHAREPOINT_SITE_PATH`: for example `/sites/Operations`
-- Optional:
-  - `SHAREPOINT_DRIVE_ID`
-  - `SHAREPOINT_DRIVE_NAME` (defaults to `Documents`)
-  - `SHAREPOINT_FOLDER_PATH` (for example `Dremio/Exports`)
-
-The Microsoft Entra app used above needs Microsoft Graph application permissions that can upload files to SharePoint, such as `Sites.ReadWrite.All`, with admin consent granted.
 
 ### Optional SMTP email secrets
 To email the export as an attachment, add these repository secrets:
