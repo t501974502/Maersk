@@ -58,3 +58,18 @@ jobs:
           SHAREPOINT_DRIVE_NAME: ${{ secrets.SHAREPOINT_DRIVE_NAME }}
           SHAREPOINT_FOLDER_PATH: ${{ secrets.SHAREPOINT_FOLDER_PATH }}
         run: python scripts/upload_to_sharepoint.py
+
+      - name: Email CSV attachment
+        if: ${{ secrets.SMTP_HOST != '' && secrets.SMTP_PORT != '' && secrets.SMTP_USERNAME != '' && secrets.SMTP_PASSWORD != '' && secrets.SMTP_FROM != '' && secrets.SMTP_TO != '' }}
+        env:
+          OUTPUT_DIR: output
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_USERNAME: ${{ secrets.SMTP_USERNAME }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          SMTP_FROM: ${{ secrets.SMTP_FROM }}
+          SMTP_TO: ${{ secrets.SMTP_TO }}
+          SMTP_SECURITY: ${{ secrets.SMTP_SECURITY }}
+          SMTP_SUBJECT: ${{ secrets.SMTP_SUBJECT }}
+          SMTP_BODY: ${{ secrets.SMTP_BODY }}
+        run: python scripts/send_email_with_attachment.py
