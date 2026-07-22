@@ -45,26 +45,6 @@ jobs:
           path: output/
           if-no-files-found: error
 
-      - name: Upload CSV to SharePoint
-        continue-on-error: true
-        env:
-          OUTPUT_DIR: output
-          SHAREPOINT_TENANT_ID: ${{ secrets.SHAREPOINT_TENANT_ID }}
-          SHAREPOINT_CLIENT_ID: ${{ secrets.SHAREPOINT_CLIENT_ID }}
-          SHAREPOINT_CLIENT_SECRET: ${{ secrets.SHAREPOINT_CLIENT_SECRET }}
-          SHAREPOINT_HOSTNAME: ${{ secrets.SHAREPOINT_HOSTNAME }}
-          SHAREPOINT_SITE_PATH: ${{ secrets.SHAREPOINT_SITE_PATH }}
-          SHAREPOINT_DRIVE_ID: ${{ secrets.SHAREPOINT_DRIVE_ID }}
-          SHAREPOINT_DRIVE_NAME: ${{ secrets.SHAREPOINT_DRIVE_NAME }}
-          SHAREPOINT_FOLDER_PATH: ${{ secrets.SHAREPOINT_FOLDER_PATH }}
-        run: |
-          set -e
-          if [ -n "$SHAREPOINT_TENANT_ID" ] && [ -n "$SHAREPOINT_CLIENT_ID" ] && [ -n "$SHAREPOINT_CLIENT_SECRET" ] && [ -n "$SHAREPOINT_HOSTNAME" ] && [ -n "$SHAREPOINT_SITE_PATH" ]; then
-            python scripts/upload_to_sharepoint.py
-          else
-            echo "Skipping SharePoint upload: required secrets are not fully configured."
-          fi
-
       - name: Email CSV attachment
         env:
           OUTPUT_DIR: output
