@@ -2,8 +2,11 @@ name: Export Dremio Query
 
 on:
   schedule:
-    # 00:20 UTC = 08:20 China Standard Time
-    - cron: "20 0 * * *"
+    # 07:30 China Standard Time (UTC+8) = 23:30 UTC (previous day)
+    - cron: "30 23 * * *"
+    # 08:00 / 08:30 / 09:00 / 09:30 China Standard Time = 00:00 / 00:30 / 01:00 / 01:30 UTC
+    - cron: "0 0,1 * * *"
+    - cron: "30 0,1 * * *"
   workflow_dispatch:
 
 permissions:
@@ -45,7 +48,7 @@ jobs:
           path: output/
           if-no-files-found: error
 
-      - name: Email CSV attachment
+      - name: Email CSV attachment (final run only)
         env:
           OUTPUT_DIR: output
           SMTP_HOST: ${{ secrets.SMTP_HOST }}
@@ -57,8 +60,14 @@ jobs:
           SMTP_SECURITY: ${{ secrets.SMTP_SECURITY }}
           SMTP_SUBJECT: ${{ secrets.SMTP_SUBJECT }}
           SMTP_BODY: ${{ secrets.SMTP_BODY }}
+          SHOULD_EMAIL: ${{ github.event_name == 'workflow_dispatch' || github.event.schedule == '30 1 * * *' }}
         run: |
           set -e
+          if [ "$SHOULD_EMAIL" != "true" ]; then
+            echo "Skipping email: this is not the final 09:30 CST run."
+            exit 0
+          fi
+
           if [ -n "$SMTP_HOST" ] && [ -n "$SMTP_PORT" ] && [ -n "$SMTP_USERNAME" ] && [ -n "$SMTP_PASSWORD" ] && [ -n "$SMTP_FROM" ] && [ -n "$SMTP_TO" ]; then
             python scripts/send_email_with_attachment.py
           else
