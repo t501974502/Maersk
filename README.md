@@ -51,7 +51,7 @@ The script will export the CSV locally and send the email with that CSV attached
 ### Output naming
 The export file defaults to `ops_v_raw_gts_events_YYYYMMDD_HHMMSS.csv`.
 
-### Schedule
+### Schedule and email logic
 The workflow runs every 30 minutes from 07:30 to 09:30 China Standard Time:
 - 07:30
 - 08:00
@@ -60,6 +60,8 @@ The workflow runs every 30 minutes from 07:30 to 09:30 China Standard Time:
 - 09:30
 
 Email is sent only on the final 09:30 run (manual `workflow_dispatch` runs still send email).
+
+If the 09:30 export itself fails, email step automatically falls back to the latest successful artifact from the same morning window (07:30–09:30 CST) and still sends one email.
 
 ### Manual run
 You can also trigger the workflow manually from the Actions tab using `workflow_dispatch`.
