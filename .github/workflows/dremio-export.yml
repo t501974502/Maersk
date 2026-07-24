@@ -2,8 +2,8 @@ name: Export Dremio Query
 
 on:
   schedule:
-    # 21:30 UTC (previous day) = 05:30 China Standard Time
-    - cron: "30 21 * * *"
+    # 00:20 UTC = 08:20 China Standard Time
+    - cron: "20 0 * * *"
   workflow_dispatch:
 
 permissions:

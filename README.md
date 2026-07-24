@@ -52,7 +52,7 @@ The script will export the CSV locally and send the email with that CSV attached
 The export file defaults to `ops_v_raw_gts_events_YYYYMMDD_HHMMSS.csv`.
 
 ### Schedule
-The workflow runs daily at 21:30 UTC (previous day), which is 05:30 China Standard Time.
+The workflow runs daily at 00:20 UTC, which is 08:20 China Standard Time.
 
 ### Manual run
 You can also trigger the workflow manually from the Actions tab using `workflow_dispatch`.
